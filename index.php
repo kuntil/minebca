@@ -15,7 +15,7 @@ $configs =  [
 $app = new Slim\App($configs);
 
 $app->get('/', function ($request, $response) {
-	return "LINE bot SDK - blog.ashura.id";
+	return "LINE bot SDK - mineBCA active";
 });
 
 $app->post('/', function ($request, $response)
