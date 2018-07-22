@@ -1,5 +1,4 @@
 <?php
-
 require 'vendor/autoload.php';
 
 use LINE\LINEBot\SignatureValidator as SignatureValidator;
@@ -17,6 +16,20 @@ $app = new Slim\App($configs);
 $app->get('/', function ($request, $response) {
 	return "LINE bot SDK - mineBCA active";
 });
+
+$dbopts = parse_url(getenv('DATABASE_URL'));
+$conn->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
+   array(
+	'pdo.server' => array(
+	   'driver'   => 'pgsql',
+	   'user' => $dbopts["user"],
+	   'password' => $dbopts["pass"],
+	   'host' => $dbopts["host"],
+	   'port' => $dbopts["port"],
+	   'dbname' => ltrim($dbopts["path"],'/')
+	   )
+   )
+);
 
 $app->post('/', function ($request, $response)
 {
