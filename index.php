@@ -8,14 +8,13 @@ function pg_connection_string_from_database_url() {
 $pg_conn = pg_connect(pg_connection_string_from_database_url());
 # Now let's use the connection for something silly just to prove it works:
 $result = pg_query($pg_conn, "SELECT relname FROM pg_stat_user_tables WHERE schemaname='public'");
-print "<pre>\n";
+
 if (!pg_num_rows($result)) {
-  print("Your connection is working, but your database is empty.\nFret not. This is expected for new apps.\n");
+  
 } else {
-  print "Tables in your database:\n";
+  
   while ($row = pg_fetch_row($result)) { print("- $row[0]\n"); }
 }
-print "\n";
 
 require 'vendor/autoload.php';
 
@@ -74,6 +73,95 @@ $app->post('/', function ($request, $response)
 		}
 	}
 
+});
+
+$app->post('ticket',function($request,$response){
+	$postdata = file_get_contents("php://input");
+	$request = json_decode($postdata);
+	$id_ = $request->ID;
+	$title_ = $request->title;
+	$subtitle_ = $request->subtitle;
+	
+	$result_ = pg_query($pg_conn, "INSERT INTO ticket_tbl(id,title,subtitle) VALUES ('$id_','$title_','$subtitle_')");
+	$data = array(
+					'error'=>0,
+					'message'=>'succesfull'
+	);
+	echo json_encode($data);
+});
+
+$app->get('ticket',function($request,$response){
+
+	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl ORDER BY no DSC LIMIT 5");
+	if(pg_num_rows($result_) > 0){
+		$response["error"]=0;
+		$response["ticket"]= array();
+		while($obj = pg_fetch_assoc($result_)){
+			array_push($response["ticket"], $obj);
+		}
+	}
+    echo json_encode($response);
+});
+
+$app->get('/ticket/{ID}',function($request,$response,array $args){
+	$id_ = $args['ID'];
+	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl WHERE id='$id_'");
+	if(pg_num_rows($result_) > 0){
+		$response["error"]=0;
+		$response["ticket"]= array();
+		while($obj = pg_fetch_assoc($result_)){
+			array_push($response["ticket"], $obj);
+		}
+	}
+    echo json_encode($response);
+});
+
+$app->post('apply',function($request,$response){}
+	$postdata = file_get_contents("php://input");
+	$request = json_decode($postdata);
+	$id_ = $request->ID;
+	$title_ = $request->title;
+	$subtitle_ = $request->subtitle;
+	
+	$result_ = pg_query($pg_conn, "INSERT INTO apply_tbl(id,title,subtitle) VALUES ('$id_','$title_','$subtitle_')");
+	$data = array(
+					'error'=>0,
+					'message'=>'succesfull'
+	);
+	echo json_encode($data);
+);
+
+$app->get('/apply/',function(Request $request,Response $response){}
+		
+	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DSC LIMIT 5");
+	if(pg_num_rows($result_) > 0){
+		$response["error"]=0;
+		$response["apply"]= array();
+		while($obj = pg_fetch_assoc($result_)){
+			array_push($response["apply"], $obj);
+		}
+	}
+    echo json_encode($response);
+	
+);
+
+$app->get('/apply/{ID}',function(Request $request,Response $response,array $args){}
+	$id_ = $args['ID'];
+	
+	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl WHERE ID ='$id_'");
+	if(pg_num_rows($result_) > 0){
+		$response["error"]=0;
+		$response["apply"]= array();
+		while($obj = pg_fetch_assoc($result_)){
+			array_push($response["apply"], $obj);
+		}
+	}
+    echo json_encode($response);
+	
+);
+
+$app->post('login',function($request,$response){
+	
 });
 
 $app->run();
