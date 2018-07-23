@@ -75,7 +75,7 @@ $app->post('/', function ($request, $response)
 
 });
 
-$app->post('ticket',function($request,$response){
+$app->post('addTicket',function($request,$response){
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);
 	$id_ = $request->ID;
@@ -90,7 +90,20 @@ $app->post('ticket',function($request,$response){
 	echo json_encode($data);
 });
 
-$app->get('ticket',function($request,$response){
+$app->get('/delTicket/{ID}',function($request,$response,array $args){
+	$id_ = $args['ID'];
+	$result_ = pg_query($pg_conn, "DELETE * FROM ticket_tbl WHERE id='$id_'");
+	if(pg_num_rows($result_) > 0){
+		$response["error"]=0;
+		$response["ticket"]= array();
+		while($obj = pg_fetch_assoc($result_)){
+			array_push($response["ticket"], $obj);
+		}
+	}
+    echo json_encode($response);
+});
+
+$app->get('/ticket/',function($request,$response){
 
 	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl ORDER BY no DSC LIMIT 5");
 	if(pg_num_rows($result_) > 0){
@@ -116,7 +129,7 @@ $app->get('/ticket/{ID}',function($request,$response,array $args){
     echo json_encode($response);
 });
 
-$app->post('apply',function($request,$response){}
+$app->post('/addApply/',function($request,$response){}
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);
 	$id_ = $request->ID;
@@ -129,6 +142,21 @@ $app->post('apply',function($request,$response){}
 					'message'=>'succesfull'
 	);
 	echo json_encode($data);
+);
+
+$app->get('/delApply/{ID}',function(Request $request,Response $response,array $args){}
+	$id_ = $args['ID'];
+	
+	$result_ = pg_query($pg_conn, "DELETE * FROM apply_tbl WHERE ID ='$id_'");
+	if(pg_num_rows($result_) > 0){
+		$response["error"]=0;
+		$response["apply"]= array();
+		while($obj = pg_fetch_assoc($result_)){
+			array_push($response["apply"], $obj);
+		}
+	}
+    echo json_encode($response);
+	
 );
 
 $app->get('/apply/',function(Request $request,Response $response){}
