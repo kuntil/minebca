@@ -129,7 +129,7 @@ $app->get('/ticket/{ID}',function($request,$response,array $args){
     echo json_encode($response);
 });
 
-$app->post('/addApply/',function($request,$response){}
+$app->post('/addApply/',function($request,$response){
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);
 	$id_ = $request->ID;
@@ -142,9 +142,9 @@ $app->post('/addApply/',function($request,$response){}
 					'message'=>'succesfull'
 	);
 	echo json_encode($data);
-);
+});
 
-$app->get('/delApply/{ID}',function(Request $request,Response $response,array $args){}
+$app->get('/delApply/{ID}',function(Request $request,Response $response,array $args){
 	$id_ = $args['ID'];
 	
 	$result_ = pg_query($pg_conn, "DELETE * FROM apply_tbl WHERE ID ='$id_'");
@@ -157,9 +157,9 @@ $app->get('/delApply/{ID}',function(Request $request,Response $response,array $a
 	}
     echo json_encode($response);
 	
-);
+});
 
-$app->get('/apply/',function(Request $request,Response $response){}
+$app->get('/apply/',function(Request $request,Response $response){
 		
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DSC LIMIT 5");
 	if(pg_num_rows($result_) > 0){
@@ -171,9 +171,9 @@ $app->get('/apply/',function(Request $request,Response $response){}
 	}
     echo json_encode($response);
 	
-);
+});
 
-$app->get('/apply/{ID}',function(Request $request,Response $response,array $args){}
+$app->get('/apply/{ID}',function(Request $request,Response $response,array $args){
 	$id_ = $args['ID'];
 	
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl WHERE ID ='$id_'");
@@ -186,7 +186,7 @@ $app->get('/apply/{ID}',function(Request $request,Response $response,array $args
 	}
     echo json_encode($response);
 	
-);
+});
 
 $app->post('login',function($request,$response){
 	
