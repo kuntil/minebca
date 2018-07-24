@@ -157,15 +157,12 @@ $app->get('/delApply/{ID}',function($request,$response,array $args){
 $app->get('/apply/',function($request,$response){
 		
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DESC LIMIT 5");
-	echo("sadasdasdasdasd");
-	if(pg_num_rows($result_) > 0){
-		echo "sini";
-		$response["error"]=0;
-		$response["apply"]= array();
-		while($obj = pg_fetch_assoc($result_)){
-			array_push($response["apply"], $obj);
-		}
+	$response["error"]=0;
+	$response["apply"]= array();
+	while($obj = pg_fetch_assoc($result_)){
+		array_push($response["apply"], $obj);
 	}
+	
     echo json_encode($response);
 	
 });
