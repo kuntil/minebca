@@ -72,49 +72,58 @@ $app->post('/addTicket/',function($request,$response){
 	$id_ = $request->ID;
 	$title_ = $request->title;
 	$subtitle_ = $request->subtitle;
-	
+	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$result_ = pg_query($pg_conn, "INSERT INTO ticket_tbl(id,title,subtitle) VALUES ('$id_','$title_','$subtitle_')");
 	$data = array(
 					'error'=>0,
 					'message'=>'succesfull'
 	);
+	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
 });
 
 $app->get('/delTicket/{ID}',function($request,$response,array $args){
 	$id_ = $args['ID'];
+	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$result_ = pg_query($pg_conn, "DELETE * FROM ticket_tbl WHERE id='$id_'");
 	if(pg_num_rows($result_) > 0){
+		$response = array();
 		$response["error"]=0;
 		$response["ticket"]= array();
 		while($obj = pg_fetch_assoc($result_)){
 			array_push($response["ticket"], $obj);
 		}
 	}
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 });
 
 $app->get('/ticket/',function($request,$response){
-
+	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl ORDER BY no DESC LIMIT 5");
+	$response = array();
 	$response["error"]=0;
 	$response["ticket"]= array();
 	while($obj = pg_fetch_assoc($result_)){
 		array_push($response["ticket"], $obj);
 	}
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 });
 
 $app->get('/ticket/{ID}',function($request,$response,array $args){
 	$id_ = $args['ID'];
+	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl WHERE id='$id_'");
 	if(pg_num_rows($result_) > 0){
+		$response = array();
 		$response["error"]=0;
 		$response["ticket"]= array();
 		while($obj = pg_fetch_assoc($result_)){
 			array_push($response["ticket"], $obj);
 		}
 	}
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 });
 
@@ -124,7 +133,7 @@ $app->post('/addApply/',function($request,$response){
 	$id_ = $request->ID;
 	$title_ = $request->title;
 	$subtitle_ = $request->subtitle;
-	
+	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$query_ = "INSERT INTO apply_tbl(id,title,subtitle) VALUES ('$id_','$title_','$subtitle_')";
 	if(pg_query($pg_conn,$query_)){
 		$message_ = "successfully";
@@ -136,20 +145,23 @@ $app->post('/addApply/',function($request,$response){
 					'error'=>0,
 					'message'=>$message_
 	);
+	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
 });
 
 $app->get('/delApply/{ID}',function($request,$response,array $args){
 	$id_ = $args['ID'];
-	
+	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$result_ = pg_query($pg_conn, "DELETE * FROM apply_tbl WHERE ID ='$id_'");
 	if(pg_num_rows($result_) > 0){
+		$response = array();
 		$response["error"]=0;
 		$response["apply"]= array();
 		while($obj = pg_fetch_assoc($result_)){
 			array_push($response["apply"], $obj);
 		}
 	}
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 	
 });
@@ -157,28 +169,32 @@ $app->get('/delApply/{ID}',function($request,$response,array $args){
 $app->get('/apply/',function($request,$response){
 	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DESC LIMIT 5");
-	$response = array();
-	$response['errors']=0;
-	$response['apply']=array();
-	while($obj = pg_fetch_assoc($result_)){
-		array_push($response['apply'], $obj);
+	if(pg_num_rows($result_) > 0){
+		$response = array();
+		$response['errors']=0;
+		$response['apply']=array();
+		while($obj = pg_fetch_assoc($result_)){
+			array_push($response['apply'], $obj);
+		}
 	}
-	
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 	
 });
 
 $app->get('/apply/{ID}',function($request,$response,array $args){
 	$id_ = $args['ID'];
-	
+	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl WHERE ID ='$id_'");
 	if(pg_num_rows($result_) > 0){
+		$response = array();
 		$response["error"]=0;
 		$response["apply"]= array();
 		while($obj = pg_fetch_assoc($result_)){
 			array_push($response["apply"], $obj);
 		}
 	}
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 	
 });
