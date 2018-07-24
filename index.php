@@ -160,7 +160,7 @@ $app->get('/delApply/{ID}',function($request,$response,array $args){
 $app->get('/apply/',function($request,$response){
 		
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DESC LIMIT 5");
-	print_r($result_);
+	echo("sadasdasdasdasd");
 	if(pg_num_rows($result_) > 0){
 		echo "sini";
 		$response["error"]=0;
