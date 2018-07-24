@@ -205,7 +205,7 @@ $app->get('/apply/',function($request,$response){
 	}
 	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
-	
+	line_message("masuk sini");
 });
 
 $app->get('/apply/{ID}',function($request,$response,array $args){
