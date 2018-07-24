@@ -5,7 +5,7 @@ function send_message(){
 	$bot = new \LINE\LINEBot($httpClient, ['432cecc4a8ed0059bc66817062e13863' => '432cecc4a8ed0059bc66817062e13863']);
 
 	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('tes kirim pesan');
-	$response = $bot->pushMessage('<to>', $textMessageBuilder);
+	$response = $bot->pushMessage('U1de03f3dbaf97b59dac15d703feec600', $textMessageBuilder);
 
 	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
 }
