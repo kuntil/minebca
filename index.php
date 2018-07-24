@@ -127,10 +127,16 @@ $app->post('/addApply/',function($request,$response){
 	$title_ = $request->title;
 	$subtitle_ = $request->subtitle;
 	
-	$result_ = pg_query($pg_conn, "INSERT INTO apply_tbl(id,title,subtitle) VALUES ('$id_','$title_','$subtitle_')");
+	$query_ = "INSERT INTO apply_tbl(id,title,subtitle) VALUES ('$id_','$title_','$subtitle_')";
+	if(pg_query($pg_conn,$query_)){
+		$message_ = "successfully";
+	}else{
+		$message_ = "unsuccessful";
+	}
+	
 	$data = array(
 					'error'=>0,
-					'message'=>$result_
+					'message'=>$message_
 	);
 	echo json_encode($data);
 });
