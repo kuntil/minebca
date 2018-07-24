@@ -6,15 +6,6 @@ function pg_connection_string_from_database_url() {
 }
 # Here we establish the connection. Yes, that's all.
 $pg_conn = pg_connect(pg_connection_string_from_database_url());
-# Now let's use the connection for something silly just to prove it works:
-$result = pg_query($pg_conn, "SELECT relname FROM pg_stat_user_tables WHERE schemaname='public'");
-
-if (!pg_num_rows($result)) {
-  
-} else {
-  
-  while ($row = pg_fetch_row($result)) { print("- $row[0]\n"); }
-}
 
 require 'vendor/autoload.php';
 
@@ -129,7 +120,7 @@ $app->get('/ticket/{ID}',function($request,$response,array $args){
     echo json_encode($response);
 });
 
-$app->post('/addApply/',function($request,$response){
+$app->post('addApply',function($request,$response){
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);
 	$id_ = $request->ID;
