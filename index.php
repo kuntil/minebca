@@ -1,10 +1,10 @@
 <?php
 
-function send_message(){
+function send_message($message){
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient('Hex/0xY5Hx6/rJpDPDkrFyKSHlyYKlnvVq9zx0+KtspqrIhDH7+rZVQEYQ2627Vgd0p1h3kW+w3wtzdK/WUjKFhDto55ImuqmdWLF5a9QrQNfuJoZwv9kjGKSAip1/EmZN/WubFrF6Xb5teFauiIDAdB04t89/1O/w1cDnyilFU=');
 	$bot = new \LINE\LINEBot($httpClient, ['432cecc4a8ed0059bc66817062e13863' => '432cecc4a8ed0059bc66817062e13863']);
 
-	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('tes kirim pesan');
+	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 	$response = $bot->pushMessage('U1de03f3dbaf97b59dac15d703feec600', $textMessageBuilder);
 
 	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
@@ -90,6 +90,7 @@ $app->post('/addTicket/',function($request,$response){
 	);
 	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
+	send_message('Permintaan : '.$title.'. Pesan -> '.$subtitle);
 });
 
 $app->get('/delTicket/{ID}',function($request,$response,array $args){
@@ -119,7 +120,6 @@ $app->get('/ticket/',function($request,$response){
 	}
 	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
-	send_message();
 });
 
 $app->get('/ticket/{ID}',function($request,$response,array $args){
@@ -158,6 +158,7 @@ $app->post('/addApply/',function($request,$response){
 	);
 	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
+	send_message('Permintaan : '.$title.'. Pesan -> '.$subtitle);
 });
 
 $app->get('/delApply/{ID}',function($request,$response,array $args){
