@@ -97,8 +97,8 @@ $app->get('/delTicket/{ID}',function($request,$response,array $args){
 $app->get('/ticket/',function($request,$response){
 
 	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl ORDER BY no DESC LIMIT 5");
+	
 	if(pg_num_rows($result_) > 0){
-		echo "sini";
 		$response["error"]=0;
 		$response["ticket"]= array();
 		while($obj = pg_fetch_assoc($result_)){
@@ -160,7 +160,9 @@ $app->get('/delApply/{ID}',function($request,$response,array $args){
 $app->get('/apply/',function($request,$response){
 		
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DESC LIMIT 5");
+	print_r(pg_num_rows($result_));
 	if(pg_num_rows($result_) > 0){
+		echo "sini";
 		$response["error"]=0;
 		$response["apply"]= array();
 		while($obj = pg_fetch_assoc($result_)){
