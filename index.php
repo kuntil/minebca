@@ -1,19 +1,5 @@
 <?php
 
-require 'vendor/autoload.php';
-
-use LINE\LINEBot\SignatureValidator as SignatureValidator;
-use LINE\LINEBot\MessageBuilder\TextMessageBuilder as TextMessageBuilder;
-foreach (glob("handler/*.php") as $handler){include $handler;}
-
-$dotenv = new Dotenv\Dotenv('env');
-$dotenv->load();
-
-$configs =  [
-	'settings' => ['displayErrorDetails' => true],
-];
-$app = new Slim\App($configs);
-
 function pg_connection_string_from_database_url() {
   extract(parse_url($_ENV["DATABASE_URL"]));
   return "user=$user password=$pass host=$host dbname=" . substr($path, 1); # <- you may want to add sslmode=require there too
@@ -24,11 +10,11 @@ function line_message($message){
 	file_put_contents('php://stderr', 'Body: '.$body);
 	
 	if (empty($signature)){
-		return $response->withStatus(400, 'Signature not set');
+		//return $response->withStatus(400, 'Signature not set');
 	}
 	
 	if($_ENV['PASS_SIGNATURE'] == false && ! SignatureValidator::validateSignature($body, $_ENV['CHANNEL_SECRET'], $signature)){
-		return $response->withStatus(400, 'Invalid signature');
+		//return $response->withStatus(400, 'Invalid signature');
 	}
 	
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
@@ -45,6 +31,19 @@ function line_message($message){
 # Here we establish the connection. Yes, that's all.
 $pg_conn = pg_connect(pg_connection_string_from_database_url());
 
+require 'vendor/autoload.php';
+
+use LINE\LINEBot\SignatureValidator as SignatureValidator;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder as TextMessageBuilder;
+foreach (glob("handler/*.php") as $handler){include $handler;}
+
+$dotenv = new Dotenv\Dotenv('env');
+$dotenv->load();
+
+$configs =  [
+	'settings' => ['displayErrorDetails' => true],
+];
+$app = new Slim\App($configs);
 
 $app->get('/', function ($request, $response) {
 	return "LINE bot SDK - mineBCA active";
@@ -52,7 +51,42 @@ $app->get('/', function ($request, $response) {
 
 $app->post('/', function ($request, $response)
 {
+	$body 	   = file_get_contents('php://input');
+	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
+	file_put_contents('php://stderr', 'Body: '.$body);
 	
+	if (empty($signature)){
+		return $response->withStatus(400, 'Signature not set');
+	}
+	
+	if($_ENV['PASS_SIGNATURE'] == false && ! SignatureValidator::validateSignature($body, $_ENV['CHANNEL_SECRET'], $signature)){
+		return $response->withStatus(400, 'Invalid signature');
+	}
+	
+	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
+	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+
+	$data = json_decode($body, true);
+	foreach ($data['events'] as $event)
+	{
+		if ($event['type'] == 'message')
+		{
+			if($event['message']['type'] == 'text')
+			{
+				
+				// --------------------------------------------------------------- NOTICE ME...
+				
+				$inputMessage = $event['message']['text'];
+				$outputMessage = new TextMessageBuilder($inputMessage);
+				
+				$result = $bot->replyMessage($event['replyToken'], $outputMessage);
+				return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+				
+				// --------------------------------------------------------------- ...SENPAI!
+				
+			}
+		}
+	}
 
 });
 
@@ -68,7 +102,7 @@ $app->post('/addTicket/',function($request,$response){
 					'error'=>0,
 					'message'=>'succesfull'
 	);
-	
+	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
 });
 
@@ -84,7 +118,7 @@ $app->get('/delTicket/{ID}',function($request,$response,array $args){
 			array_push($response["ticket"], $obj);
 		}
 	}
-	
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 });
 
@@ -97,7 +131,7 @@ $app->get('/ticket/',function($request,$response){
 	while($obj = pg_fetch_assoc($result_)){
 		array_push($response["ticket"], $obj);
 	}
-	line_message("Permintaan ");
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 });
 
@@ -113,7 +147,7 @@ $app->get('/ticket/{ID}',function($request,$response,array $args){
 			array_push($response["ticket"], $obj);
 		}
 	}
-	
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 });
 
@@ -135,8 +169,7 @@ $app->post('/addApply/',function($request,$response){
 					'error'=>0,
 					'message'=>$message_
 	);
-	
-	line_message("Permintaan ".$title.". Keluhan :".$subtitle);
+	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
 });
 
@@ -152,7 +185,8 @@ $app->get('/delApply/{ID}',function($request,$response,array $args){
 			array_push($response["apply"], $obj);
 		}
 	}
-	echo json_encode($response);
+	pg_close(pg_connection_string_from_database_url());
+    echo json_encode($response);
 	
 });
 
@@ -167,6 +201,7 @@ $app->get('/apply/',function($request,$response){
 			array_push($response['apply'], $obj);
 		}
 	}
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 	
 });
@@ -183,7 +218,7 @@ $app->get('/apply/{ID}',function($request,$response,array $args){
 			array_push($response["apply"], $obj);
 		}
 	}
-	
+	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 	
 });
