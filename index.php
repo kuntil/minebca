@@ -97,7 +97,7 @@ $app->get('/ticket/',function($request,$response){
 	while($obj = pg_fetch_assoc($result_)){
 		array_push($response["ticket"], $obj);
 	}
-	
+	line_message("Permintaan ");
     echo json_encode($response);
 });
 
