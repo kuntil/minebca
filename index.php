@@ -7,6 +7,7 @@ function pg_connection_string_from_database_url() {
 
 function line_message($message){
 	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
+	echo $signature;
 	file_put_contents('php://stderr', 'Body: '.$body);
 	
 	if (empty($signature)){
