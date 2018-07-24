@@ -96,7 +96,7 @@ $app->get('/delTicket/{ID}',function($request,$response,array $args){
 
 $app->get('/ticket/',function($request,$response){
 
-	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl ORDER BY no DSC LIMIT 5");
+	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl ORDER BY no DESC LIMIT 5");
 	if(pg_num_rows($result_) > 0){
 		$response["error"]=0;
 		$response["ticket"]= array();
@@ -127,7 +127,7 @@ $app->post('/addApply/',function($request,$response){
 	$title_ = $request->title;
 	$subtitle_ = $request->subtitle;
 	
-	$query_ = "INSERT INTO apply_tbl(no,id,title,subtitle) VALUES ('','$id_','$title_','$subtitle_')";
+	$query_ = "INSERT INTO apply_tbl(id,title,subtitle) VALUES ('$id_','$title_','$subtitle_')";
 	if(pg_query($pg_conn,$query_)){
 		$message_ = "successfully";
 	}else{
@@ -158,7 +158,7 @@ $app->get('/delApply/{ID}',function($request,$response,array $args){
 
 $app->get('/apply/',function($request,$response){
 		
-	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DSC LIMIT 5");
+	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DESC LIMIT 5");
 	if(pg_num_rows($result_) > 0){
 		$response["error"]=0;
 		$response["apply"]= array();
