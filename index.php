@@ -128,7 +128,6 @@ $app->post('/addApply/',function($request,$response){
 	$subtitle_ = $request->subtitle;
 	
 	$query_ = "INSERT INTO apply_tbl(no,id,title,subtitle) VALUES ('','$id_','$title_','$subtitle_')";
-	echo $query_;
 	if(pg_query($pg_conn,$query_)){
 		$message_ = "successfully";
 	}else{
