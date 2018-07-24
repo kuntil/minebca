@@ -1,32 +1,19 @@
 <?php
 
+function send_message(){
+	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient('Hex/0xY5Hx6/rJpDPDkrFyKSHlyYKlnvVq9zx0+KtspqrIhDH7+rZVQEYQ2627Vgd0p1h3kW+w3wtzdK/WUjKFhDto55ImuqmdWLF5a9QrQNfuJoZwv9kjGKSAip1/EmZN/WubFrF6Xb5teFauiIDAdB04t89/1O/w1cDnyilFU=');
+	$bot = new \LINE\LINEBot($httpClient, ['432cecc4a8ed0059bc66817062e13863' => '432cecc4a8ed0059bc66817062e13863']);
+
+	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('tes kirim pesan');
+	$response = $bot->pushMessage('<to>', $textMessageBuilder);
+
+	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
+}
+
 function pg_connection_string_from_database_url() {
   extract(parse_url($_ENV["DATABASE_URL"]));
   return "user=$user password=$pass host=$host dbname=" . substr($path, 1); # <- you may want to add sslmode=require there too
 }
-
-function line_message($message){
-	use LINE\LINEBot\SignatureValidator as SignatureValidator;
-	use LINE\LINEBot\MessageBuilder\TextMessageBuilder as TextMessageBuilder;
-	foreach (glob("handler/*.php") as $handler){include $handler;}
-
-	$dotenv = new Dotenv\Dotenv('env');
-	$dotenv->load();
-
-	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
-	echo $signature;
-		
-	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
-	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-
-	$inputMessage = $message;
-	$outputMessage = new TextMessageBuilder($inputMessage);
-	
-	$result = $bot->replyMessage($event['replyToken'], $outputMessage);
-	return $result->getHTTPStatus() . ' ' . $result->getRawBody();
-}
-
-	
 # Here we establish the connection. Yes, that's all.
 $pg_conn = pg_connect(pg_connection_string_from_database_url());
 
@@ -132,6 +119,7 @@ $app->get('/ticket/',function($request,$response){
 	}
 	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
+	send_message();
 });
 
 $app->get('/ticket/{ID}',function($request,$response,array $args){
@@ -170,7 +158,6 @@ $app->post('/addApply/',function($request,$response){
 	);
 	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
-	line_message("masuk sini");
 });
 
 $app->get('/delApply/{ID}',function($request,$response,array $args){
@@ -203,7 +190,7 @@ $app->get('/apply/',function($request,$response){
 	}
 	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
-	line_message("masuk sini");
+	
 });
 
 $app->get('/apply/{ID}',function($request,$response,array $args){
