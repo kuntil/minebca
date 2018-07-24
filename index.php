@@ -172,6 +172,7 @@ $app->post('/addApply/',function($request,$response){
 	);
 	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
+	line_message("masuk sini");
 });
 
 $app->get('/delApply/{ID}',function($request,$response,array $args){
