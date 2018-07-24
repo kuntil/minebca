@@ -130,7 +130,7 @@ $app->post('/addApply/',function($request,$response){
 	$result_ = pg_query($pg_conn, "INSERT INTO apply_tbl(id,title,subtitle) VALUES ('$id_','$title_','$subtitle_')");
 	$data = array(
 					'error'=>0,
-					'message'=>'succesfull'
+					'message'=>$result_
 	);
 	echo json_encode($data);
 });
