@@ -15,16 +15,7 @@ function line_message($message){
 
 	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
 	echo $signature;
-	file_put_contents('php://stderr', 'Body: '.$body);
-	
-	if (empty($signature)){
-		//return $response->withStatus(400, 'Signature not set');
-	}
-	
-	if($_ENV['PASS_SIGNATURE'] == false && ! SignatureValidator::validateSignature($body, $_ENV['CHANNEL_SECRET'], $signature)){
-		//return $response->withStatus(400, 'Invalid signature');
-	}
-	
+		
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 
