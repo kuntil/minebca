@@ -135,7 +135,7 @@ $app->post('/addApply/',function($request,$response){
 	echo json_encode($data);
 });
 
-$app->get('/delApply/{ID}',function(Request $request,Response $response,array $args){
+$app->get('/delApply/{ID}',function($request,$response,array $args){
 	$id_ = $args['ID'];
 	
 	$result_ = pg_query($pg_conn, "DELETE * FROM apply_tbl WHERE ID ='$id_'");
@@ -150,7 +150,7 @@ $app->get('/delApply/{ID}',function(Request $request,Response $response,array $a
 	
 });
 
-$app->get('/apply/',function(Request $request,Response $response){
+$app->get('/apply/',function($request,$response){
 		
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DSC LIMIT 5");
 	if(pg_num_rows($result_) > 0){
@@ -164,7 +164,7 @@ $app->get('/apply/',function(Request $request,Response $response){
 	
 });
 
-$app->get('/apply/{ID}',function(Request $request,Response $response,array $args){
+$app->get('/apply/{ID}',function($request,$response,array $args){
 	$id_ = $args['ID'];
 	
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl WHERE ID ='$id_'");
