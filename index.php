@@ -157,6 +157,7 @@ $app->get('/delApply/{ID}',function($request,$response,array $args){
 $app->get('/apply/',function($request,$response){
 	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DESC LIMIT 5");
+	$response = array();
 	$response['errors']=0;
 	$response['apply']=array();
 	while($obj = pg_fetch_assoc($result_)){
