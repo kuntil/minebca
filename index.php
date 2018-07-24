@@ -158,6 +158,7 @@ $app->get('/apply/',function($request,$response){
 	$pg_conn = pg_connect(pg_connection_string_from_database_url());
 	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DESC LIMIT 5");
 	print_r(pg_fetch_assoc($result_));
+	$response = array();
 	$response->error=0;
 	$response->apply = array();
 	while($obj = pg_fetch_assoc($result_)){
