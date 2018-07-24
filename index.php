@@ -1,5 +1,19 @@
 <?php
 
+require 'vendor/autoload.php';
+
+use LINE\LINEBot\SignatureValidator as SignatureValidator;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder as TextMessageBuilder;
+foreach (glob("handler/*.php") as $handler){include $handler;}
+
+$dotenv = new Dotenv\Dotenv('env');
+$dotenv->load();
+
+$configs =  [
+	'settings' => ['displayErrorDetails' => true],
+];
+$app = new Slim\App($configs);
+
 function pg_connection_string_from_database_url() {
   extract(parse_url($_ENV["DATABASE_URL"]));
   return "user=$user password=$pass host=$host dbname=" . substr($path, 1); # <- you may want to add sslmode=require there too
@@ -31,19 +45,6 @@ function line_message($message){
 # Here we establish the connection. Yes, that's all.
 $pg_conn = pg_connect(pg_connection_string_from_database_url());
 
-require 'vendor/autoload.php';
-
-use LINE\LINEBot\SignatureValidator as SignatureValidator;
-use LINE\LINEBot\MessageBuilder\TextMessageBuilder as TextMessageBuilder;
-foreach (glob("handler/*.php") as $handler){include $handler;}
-
-$dotenv = new Dotenv\Dotenv('env');
-$dotenv->load();
-
-$configs =  [
-	'settings' => ['displayErrorDetails' => true],
-];
-$app = new Slim\App($configs);
 
 $app->get('/', function ($request, $response) {
 	return "LINE bot SDK - mineBCA active";
