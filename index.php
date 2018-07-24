@@ -67,7 +67,7 @@ $app->post('/addTicket/',function($request,$response){
 					'error'=>0,
 					'message'=>'succesfull'
 	);
-	pg_close(pg_connection_string_from_database_url());
+	
 	echo json_encode($data);
 });
 
@@ -83,7 +83,7 @@ $app->get('/delTicket/{ID}',function($request,$response,array $args){
 			array_push($response["ticket"], $obj);
 		}
 	}
-	pg_close(pg_connection_string_from_database_url());
+	
     echo json_encode($response);
 });
 
@@ -96,7 +96,7 @@ $app->get('/ticket/',function($request,$response){
 	while($obj = pg_fetch_assoc($result_)){
 		array_push($response["ticket"], $obj);
 	}
-	pg_close(pg_connection_string_from_database_url());
+	
     echo json_encode($response);
 });
 
@@ -112,7 +112,7 @@ $app->get('/ticket/{ID}',function($request,$response,array $args){
 			array_push($response["ticket"], $obj);
 		}
 	}
-	pg_close(pg_connection_string_from_database_url());
+	
     echo json_encode($response);
 });
 
@@ -134,7 +134,7 @@ $app->post('/addApply/',function($request,$response){
 					'error'=>0,
 					'message'=>$message_
 	);
-	pg_close(pg_connection_string_from_database_url());
+	
 	line_message("Permintaan ".$title.". Keluhan :".$subtitle);
 	echo json_encode($data);
 });
@@ -151,8 +151,7 @@ $app->get('/delApply/{ID}',function($request,$response,array $args){
 			array_push($response["apply"], $obj);
 		}
 	}
-	pg_close(pg_connection_string_from_database_url());
-    echo json_encode($response);
+	echo json_encode($response);
 	
 });
 
@@ -167,7 +166,6 @@ $app->get('/apply/',function($request,$response){
 			array_push($response['apply'], $obj);
 		}
 	}
-	pg_close(pg_connection_string_from_database_url());
     echo json_encode($response);
 	
 });
@@ -184,7 +182,7 @@ $app->get('/apply/{ID}',function($request,$response,array $args){
 			array_push($response["apply"], $obj);
 		}
 	}
-	pg_close(pg_connection_string_from_database_url());
+	
     echo json_encode($response);
 	
 });
