@@ -6,6 +6,13 @@ function pg_connection_string_from_database_url() {
 }
 
 function line_message($message){
+	use LINE\LINEBot\SignatureValidator as SignatureValidator;
+	use LINE\LINEBot\MessageBuilder\TextMessageBuilder as TextMessageBuilder;
+	foreach (glob("handler/*.php") as $handler){include $handler;}
+
+	$dotenv = new Dotenv\Dotenv('env');
+	$dotenv->load();
+
 	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
 	echo $signature;
 	file_put_contents('php://stderr', 'Body: '.$body);
