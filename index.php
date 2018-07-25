@@ -5,7 +5,7 @@ function send_message($message){
 	$bot = new \LINE\LINEBot($httpClient, ['432cecc4a8ed0059bc66817062e13863' => '432cecc4a8ed0059bc66817062e13863']);
 
 	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-	$response = $bot->pushMessage('U1de03f3dbaf97b59dac15d703feec600', $textMessageBuilder);
+	$response = $bot->pushMessage('Cc5572be3e840465a0dbef150eabc209f', $textMessageBuilder);
 
 	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
 }
@@ -59,10 +59,56 @@ $app->post('/', function ($request, $response)
 		{
 			if($event['message']['type'] == 'text')
 			{
-				
 				// --------------------------------------------------------------- NOTICE ME...
-				
-				$inputMessage = $event['source']['groupId'];
+				$message = $event['message']['text'];
+				if($message =='#HELP'){
+						$inputMessage = "
+						#STATUS 		: Melihat status permintaan \n
+						#STATUS#PENDING : Melihat status permintaan yang pending \n
+						#STATUS#DONE    : Melihat status permintaan yang telah selesai \n
+						#TEMPLATE1 		: Melihat template untuk pengiriman pesan ke merchant \n
+						#SEND#TEMPLATE1 : Mengirim pesan dengan menggunakan template 1 \n
+						#SEND#TEMPLATE2 : Mengirim pesan dengan menggunakan template 2 \n
+						";
+				}else if($message =='#STATUS'){
+						$inputMessage = "
+						1. Permintaan Apply  Aktif : 10 \n
+						2. Permintaan Ticket Aktif : 26 \n
+						3. Status Permintaan Pending : 36 \n
+						4. Status Permintaan Selesai : 104 \n
+						";
+				}else if($message =='#STATUS#PENDING'){
+						$inputMessage = "
+						1. Hypermart  : EDC Rusak \n
+						2. Nusa Mart  : Tambah EDC \n
+						3. FoodMe     : EDC Not Connetion \n
+						4. Roti Dhiba : EDC Rusak \n
+						5. ...
+						";
+				}else if($message =='#STATUS#DONE'){
+						$inputMessage = "
+						1. RM. Sederhana : Tambah EDC \n
+						2. Tokopedia	 : Tambah EDC \n
+						3. JD ID		 : Tambah EDC \n
+						4. FoodMe 		 : Tambah EDC \n
+						5. ...
+						";
+				}else if($message =='#TEMPLATE1'){
+						$inputMessage ="
+						System kami mencatat mesin EDC anda tidak digunakan dalam dua minggu terakhir, 
+						silahkan pilih salah satu alasan menagapa mesin anda tidak digunakan ? \n
+						1. Lagi banyak transaksi tunai \n
+						2. Lebih sering menggunakan EDC bank lain \n
+						3. Mesin EDC Rusak \n
+						4. Pengunjung sepi
+						";
+				}else if($message =='#SEND#TEMPLATE1'){
+						$inputMessage="Pesan  Anda telah di kirim ...";
+						$inputMessage="Pesan  Anda telah di kirim ...";
+				}else if($message =='#SEND#TEMPLATE2'){
+				}else{
+						$inputMessage="Selamat datang di server mini (merchant identity). untuk pilih bantuan ketik #HELP";
+				}		
 				$outputMessage = new TextMessageBuilder($inputMessage);
 				
 				$result = $bot->replyMessage($event['replyToken'], $outputMessage);
