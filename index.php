@@ -204,8 +204,8 @@ $app->post('/addApply/',function($request,$response){
 	);
 	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
-	send_message('Permintaan : '.$title_.'. Pesan -> '.$subtitle_);
-});
+	send_message('Hypermart mengirim pesan. Permintaan : '.$title_.'. Pesan -> '.$subtitle_);
+});	
 
 $app->get('/delApply/{ID}',function($request,$response,array $args){
 	$id_ = $args['ID'];
