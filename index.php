@@ -90,7 +90,7 @@ $app->post('/addTicket/',function($request,$response){
 	);
 	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
-	send_message('Permintaan : '.$title.'. Pesan -> '.$subtitle);
+	send_message('Ganguan : '.$title_.'. Pesan -> '.$subtitle_);
 });
 
 $app->get('/delTicket/{ID}',function($request,$response,array $args){
@@ -158,7 +158,7 @@ $app->post('/addApply/',function($request,$response){
 	);
 	pg_close(pg_connection_string_from_database_url());
 	echo json_encode($data);
-	send_message('Permintaan : '.$title.'. Pesan -> '.$subtitle);
+	send_message('Permintaan : '.$title_.'. Pesan -> '.$subtitle_);
 });
 
 $app->get('/delApply/{ID}',function($request,$response,array $args){
