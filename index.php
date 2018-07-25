@@ -51,7 +51,7 @@ $app->post('/', function ($request, $response)
 	
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-
+	
 	$data = json_decode($body, true);
 	foreach ($data['events'] as $event)
 	{
@@ -62,7 +62,7 @@ $app->post('/', function ($request, $response)
 				
 				// --------------------------------------------------------------- NOTICE ME...
 				
-				$inputMessage = $event['message']['text'];
+				$inputMessage = $event['groubId']."/".$event['userId'];
 				$outputMessage = new TextMessageBuilder($inputMessage);
 				
 				$result = $bot->replyMessage($event['replyToken'], $outputMessage);
@@ -111,7 +111,7 @@ $app->get('/delTicket/{ID}',function($request,$response,array $args){
 
 $app->get('/ticket/',function($request,$response){
 	$pg_conn = pg_connect(pg_connection_string_from_database_url());
-	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl ORDER BY no DESC LIMIT 5");
+	$result_ = pg_query($pg_conn, "SELECT * FROM ticket_tbl ORDER BY no DESC LIMIT 10");
 	$response = array();
 	$response["error"]=0;
 	$response["ticket"]= array();
@@ -180,7 +180,7 @@ $app->get('/delApply/{ID}',function($request,$response,array $args){
 
 $app->get('/apply/',function($request,$response){
 	$pg_conn = pg_connect(pg_connection_string_from_database_url());
-	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DESC LIMIT 5");
+	$result_ = pg_query($pg_conn, "SELECT * FROM apply_tbl ORDER BY no DESC LIMIT 10");
 	if(pg_num_rows($result_) > 0){
 		$response = array();
 		$response['errors']=0;
