@@ -63,7 +63,7 @@ $app->post('/', function ($request, $response)
 				// --------------------------------------------------------------- NOTICE ME...
 				
 				$inputMessage = $event['source']['groupId'];
-				$outputMessage = new TextMessageBuilder($inputMessage."/".$event['source']['userId']);
+				$outputMessage = new TextMessageBuilder($inputMessage);
 				
 				$result = $bot->replyMessage($event['replyToken'], $outputMessage);
 				return $result->getHTTPStatus() . ' ' . $result->getRawBody();
