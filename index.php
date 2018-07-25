@@ -51,7 +51,7 @@ $app->post('/', function ($request, $response)
 	
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-	
+
 	$data = json_decode($body, true);
 	foreach ($data['events'] as $event)
 	{
@@ -62,7 +62,7 @@ $app->post('/', function ($request, $response)
 				
 				// --------------------------------------------------------------- NOTICE ME...
 				
-				$inputMessage = $event['groubId']."/".$event['userId'];
+				$inputMessage = $event['source']['groupId'];
 				$outputMessage = new TextMessageBuilder($inputMessage);
 				
 				$result = $bot->replyMessage($event['replyToken'], $outputMessage);
