@@ -1,8 +1,8 @@
 <?php
 
 function send_message($message){
-	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient('Hex/0xY5Hx6/rJpDPDkrFyKSHlyYKlnvVq9zx0+KtspqrIhDH7+rZVQEYQ2627Vgd0p1h3kW+w3wtzdK/WUjKFhDto55ImuqmdWLF5a9QrQNfuJoZwv9kjGKSAip1/EmZN/WubFrF6Xb5teFauiIDAdB04t89/1O/w1cDnyilFU=');
-	$bot = new \LINE\LINEBot($httpClient, ['432cecc4a8ed0059bc66817062e13863' => '432cecc4a8ed0059bc66817062e13863']);
+	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient('8/HC2Uo9u2Koso3r+X8YCrixkjjGUxMgUs2LZKMIejMSpVBndS1b4GHlBpczAA37Y3mjvGCCkGzHk/8igInfNms1Fzh4z0n7OIGKDwo0+zoLQXYOOAIlMvI8aMgorxs4Y3rSwdU4UucQwbG7VpIIugdB04t89/1O/w1cDnyilFU=');
+	$bot = new \LINE\LINEBot($httpClient, ['1fd8dfe9f841a3fa12bc912560c268dd' => '1fd8dfe9f841a3fa12bc912560c268dd']);
 
 	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 	$response = $bot->pushMessage('Cc5572be3e840465a0dbef150eabc209f', $textMessageBuilder);
