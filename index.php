@@ -10,6 +10,11 @@ function send_message($message){
 	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
 }
 
+function get_hash(){
+	
+	return "";
+}
+
 function pg_connection_string_from_database_url() {
   extract(parse_url($_ENV["DATABASE_URL"]));
   return "user=$user password=$pass host=$host dbname=" . substr($path, 1); # <- you may want to add sslmode=require there too
@@ -61,21 +66,28 @@ $app->post('/', function ($request, $response)
 			{
 				// --------------------------------------------------------------- NOTICE ME...
 				$message = $event['message']['text'];
+				// if($message =='#HELP'){
+				// 		$inputMessage = "
+				// 		#STATUS 		: Melihat status permintaan \n
+				// 		#STATUS#PENDING : Melihat status permintaan yang pending \n
+				// 		#STATUS#DONE    : Melihat status permintaan yang telah selesai \n
+				// 		#TEMPLATE1 		: Melihat template untuk pengiriman pesan ke merchant \n
+				// 		#SEND#TEMPLATE1 : Mengirim pesan dengan menggunakan template 1 \n
+				// 		#SEND#TEMPLATE2 : Mengirim pesan dengan menggunakan template 2 \n
+				// 		";
 				if($message =='#HELP'){
 						$inputMessage = "
-						#STATUS 		: Melihat status permintaan \n
-						#STATUS#PENDING : Melihat status permintaan yang pending \n
-						#STATUS#DONE    : Melihat status permintaan yang telah selesai \n
-						#TEMPLATE1 		: Melihat template untuk pengiriman pesan ke merchant \n
-						#SEND#TEMPLATE1 : Mengirim pesan dengan menggunakan template 1 \n
-						#SEND#TEMPLATE2 : Mengirim pesan dengan menggunakan template 2 \n
+						#STATUS 						: Melihat status ATM \n
+						#STATUS#PENDING 				: Melihat status ATM yang pending \n
+						#STATUS#DONE    				: Melihat status ATM yang selesai \n
+						#SEND 							: Petunjuk Pengiriman Pesan \n
+						#SEND#<kode_atm>#<kode_status> 	: Mengirim pesan status atm \n
+						#KODE 							: Melihat kode ATM \n
 						";
 				}else if($message =='#STATUS'){
 						$inputMessage = "
-						1. Permintaan Apply  Aktif : 10 \n
-						2. Permintaan Ticket Aktif : 26 \n
-						3. Status Permintaan Pending : 36 \n
-						4. Status Permintaan Selesai : 104 \n
+						1. ATM DONE : 10 \n
+						2. ATM PENDING : 26 
 						";
 				}else if($message =='#STATUS#PENDING'){
 						$inputMessage = "
@@ -93,21 +105,66 @@ $app->post('/', function ($request, $response)
 						4. FoodMe 		 : Tambah EDC \n
 						5. ...
 						";
-				}else if($message =='#TEMPLATE1'){
-						$inputMessage ="
-						System kami mencatat mesin EDC anda tidak digunakan dalam dua minggu terakhir, 
-						silahkan pilih salah satu alasan menagapa mesin anda tidak digunakan ? \n
-						1. Lagi banyak transaksi tunai \n
-						2. Lebih sering menggunakan EDC bank lain \n
-						3. Mesin EDC Rusak \n
-						4. Pengunjung sepi
-						";
-				}else if($message =='#SEND#TEMPLATE1'){
-						$inputMessage="Pesan  Anda telah di kirim ...";
-						$inputMessage="Pesan  Anda telah di kirim ...";
-				}else if($message =='#SEND#TEMPLATE2'){
+				// }else if($message =='#TEMPLATE1'){
+				// 		$inputMessage ="
+				// 		System kami mencatat mesin EDC anda tidak digunakan dalam dua minggu terakhir, 
+				// 		silahkan pilih salah satu alasan menagapa mesin anda tidak digunakan ? \n
+				// 		1. Lagi banyak transaksi tunai \n
+				// 		2. Lebih sering menggunakan EDC bank lain \n
+				// 		3. Mesin EDC Rusak \n
+				// 		4. Pengunjung sepi
+				// 		";
+				// }else if($message =='#SEND#TEMPLATE1'){
+				// 		$inputMessage="Pesan  Anda telah di kirim ...";
+				// 		$inputMessage="Pesan  Anda telah di kirim ...";
+				// }else if($message =='#SEND#TEMPLATE2'){
+				// }else{
+				// 		$inputMessage="Selamat datang di server mini (merchant identity). untuk pilih bantuan ketik #HELP";
+				// }
+				}else if($message =='#SEND'){
+					$inputMessage = "Untuk mengirim status ATM dengan format '#SEND#<kode_atm>#<1*2*3*4*5*6*7>'\n
+					Keterangan : \n
+					1. Kebersihan \n
+					2. Kertas \n
+					3. CardReader \n
+					4. Lampu \n
+					5. Keypad \n
+					6. DVR \n
+					7. CCTV \n
+					\n
+					Angka pada setelah status diganti dengan 'Y' atau 'T'.
+					 ";
+				}else if(substr($message,0,5) == '#SEND#'){
+					$string = explode('#', $message);
+					$kode_atm= $string[1];
+					$kebersihan= substr($message, -13,12);
+					$kertas = substr($message, -11,10);
+					$card = substr($message, -9,-8)
+					$lampu = substr($message, -7,-6);
+					$keypad = substr($message, -5,-4);
+					$dvr = substr($message, -3,-1);
+					$cctv = substr($message, -1,0);
+					$pg_conn = pg_connect(pg_connection_string_from_database_url());
+					$result_ = pg_query($pg_conn, "INSERT INTO notifikasi_tbl(kode_atm,kebersihan,kertas,card,lampu,keypad,dvr,cctv) VALUES ('$kode_atm','$kebersihan','$kertas','$card','$lampu','$keypad','$dvr','$cctv')");
+					$data = array(
+									'error'=>0,
+									'message'=>'succesfull'
+					);
+					$inputMessage = $data;
+					
+				}else if($message =='#KODE'){
+					$pg_conn = pg_connect(pg_connection_string_from_database_url());
+					$result_ = pg_query($pg_conn, "SELECT kode_atm FROM atm_tbl ");
+					$response = array();
+					$no=0
+					while($obj = pg_fetch_assoc($result_)){
+						$no=$no+1
+						$Message = $no.'. '.$obj['kode_atm']);
+						$inputMessage = $inputMessage.' \n '.$Message;
+					}
+					pg_close(pg_connection_string_from_database_url());
 				}else{
-						$inputMessage="Selamat datang di server mini (merchant identity). untuk pilih bantuan ketik #HELP";
+						$inputMessage="Selamat datang. Untuk pilih bantuan ketik #HELP";
 				}		
 				$outputMessage = new TextMessageBuilder($inputMessage);
 				
@@ -122,6 +179,23 @@ $app->post('/', function ($request, $response)
 
 });
 
+$app->post('/addCheck/',function($request,$response){
+	$postdata = file_get_contents("php://input");
+	$request = json_decode($postdata);
+	$id_ = $request->ID;
+	$title_ = $request->title;
+	$subtitle_ = $request->subtitle;
+	$pg_conn = pg_connect(pg_connection_string_from_database_url());
+	$result_ = pg_query($pg_conn, "INSERT INTO ticket_tbl(id,title,subtitle) VALUES ('$id_','$title_','$subtitle_')");
+	$data = array(
+					'error'=>0,
+					'message'=>'succesfull'
+	);
+	pg_close(pg_connection_string_from_database_url());
+	echo json_encode($data);
+	send_message('Hypermart mengirim pesan. Ganguan : '.$title_.'. Pesan -> '.$subtitle_);
+});
+// Ini function untuk mini (merchan identity)
 $app->post('/addTicket/',function($request,$response){
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);
@@ -257,8 +331,47 @@ $app->get('/apply/{ID}',function($request,$response,array $args){
 	
 });
 
-$app->post('login',function($request,$response){
-	
+$app->post('/login/',function($request,$response){
+	$postdata = file_get_contents("php://input");
+	$request = json_decode($postdata);
+	$username_ = $request->username;
+	$password_ = md5($request->password);
+	$result_ = pg_query($pg_conn, "SELECT 1 FROM user_tbl WHERE username='$username_' AND password='$passsword_'");
+	if(pg_num_rows($result_) > 0){
+		$message_ = "successfully";
+	}else{
+		$message_ = "unsuccessful";
+	}
+	$data = array(
+		'error'=>0,
+		'message'=>$message_
+	);
+	pg_close(pg_connection_string_from_database_url());
+	echo json_encode($data);
+});
+
+$app->post('/register/', function($request,$response){
+	$postdata = file_get_contents("php://input");
+	$request = json_decode($postdata);
+	$email_ = $request->email;
+	$norek_ = $request->no_rek;
+	$nohp_ = $request->no_hp;
+	$username_ = $request->title;
+	$password_ = md5($request->subtitle);
+	$pg_conn = pg_connect(pg_connection_string_from_database_url());
+	$query_ = "INSERT INTO user_tbl(email,no_rek,no_hp,username,password,qversion,qid) VALUES ('$email_','$norek_','$nohp_','$username_','$password_')";
+		if(pg_query($pg_conn,$query_)){
+			$message_ = "successfully";
+		}else{
+			$message_ = "unsuccessful";
+		}
+		
+	$data = array(
+		'error'=>0,
+		'message'=>$message_
+	);
+	pg_close(pg_connection_string_from_database_url());
+	echo json_encode($data);
 });
 
 $app->run();
