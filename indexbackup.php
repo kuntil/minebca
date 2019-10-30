@@ -75,7 +75,7 @@ $app->post('/', function ($request, $response)
 				// 		#SEND#TEMPLATE1 : Mengirim pesan dengan menggunakan template 1 \n
 				// 		#SEND#TEMPLATE2 : Mengirim pesan dengan menggunakan template 2 \n
 				// 		";
-				if($message =='#HELP'){
+				if($message =='HELP'){
 						$inputMessage = "
 						#STATUS 						: Melihat status ATM \n
 						#STATUS#PENDING 				: Melihat status ATM yang pending \n
