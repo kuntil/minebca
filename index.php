@@ -139,7 +139,7 @@ $app->post('/', function ($request, $response)
 					$kode_atm= $string[1];
 					$kebersihan= substr($message, -13,12);
 					$kertas = substr($message, -11,10);
-					$card = substr($message, -9,-8)
+					$card = substr($message, -9,-8);
 					$lampu = substr($message, -7,-6);
 					$keypad = substr($message, -5,-4);
 					$dvr = substr($message, -3,-1);
@@ -156,10 +156,10 @@ $app->post('/', function ($request, $response)
 					$pg_conn = pg_connect(pg_connection_string_from_database_url());
 					$result_ = pg_query($pg_conn, "SELECT kode_atm FROM atm_tbl ");
 					$response = array();
-					$no=0
+					$no=0;
 					while($obj = pg_fetch_assoc($result_)){
-						$no=$no+1
-						$Message = $no.'. '.$obj['kode_atm']);
+						$no=$no+1;
+						$Message = $no.'. '.$obj['kode_atm'];
 						$inputMessage = $inputMessage.' \n '.$Message;
 					}
 					pg_close(pg_connection_string_from_database_url());
