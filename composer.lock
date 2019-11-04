@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "28c74d8eff0f2711ac97abfcf55cbb30",
-    "content-hash": "b8da77f4c92c91aaad0fa8baed32c00d",
+    "content-hash": "7e8186dfbf41863fa3efa2f1deab36f4",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -32,27 +31,28 @@
                 "MIT"
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
-            "time": "2014-12-30 15:22:37"
+            "time": "2014-12-30T15:22:37+00:00"
         },
         {
             "name": "linecorp/line-bot-sdk",
-            "version": "1.4.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/line/line-bot-sdk-php.git",
-                "reference": "45e00a580524da0f614c91c5c61135d01bb338e1"
+                "reference": "38528aaa3a1abc2809974ab65cdcb7579f9eb927"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/line/line-bot-sdk-php/zipball/45e00a580524da0f614c91c5c61135d01bb338e1",
-                "reference": "45e00a580524da0f614c91c5c61135d01bb338e1",
+                "url": "https://api.github.com/repos/line/line-bot-sdk-php/zipball/38528aaa3a1abc2809974ab65cdcb7579f9eb927",
+                "reference": "38528aaa3a1abc2809974ab65cdcb7579f9eb927",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6"
+                "php": ">=5.4"
             },
             "require-dev": {
                 "apigen/apigen": "~4.1",
+                "indigophp/hash-compat": "~1.1.0",
                 "phpmd/phpmd": "~2.4",
                 "phpunit/phpunit": "^4.8.24",
                 "squizlabs/php_codesniffer": "~2.6"
@@ -84,7 +84,7 @@
                 "line",
                 "sdk"
             ],
-            "time": "2017-01-20 14:05:54"
+            "time": "2017-09-20T10:22:04+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -127,7 +127,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2016-10-20 17:36:47"
+            "time": "2016-10-20T17:36:47+00:00"
         },
         {
             "name": "pimple/pimple",
@@ -173,7 +173,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-09-11 15:10:35"
+            "time": "2015-09-11T15:10:35+00:00"
         },
         {
             "name": "psr/http-message",
@@ -223,7 +223,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "slim/slim",
@@ -293,7 +293,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-12-20 20:30:47"
+            "time": "2016-12-20T20:30:47+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -343,7 +343,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-09-01 10:05:43"
+            "time": "2016-09-01T10:05:43+00:00"
         }
     ],
     "packages-dev": [],
